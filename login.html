@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cmn-Hans">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>登录页</title>
     <link rel="stylesheet" href="layui/css/layui.css">
     <link rel="stylesheet" href="css/style.css">
- 
+    <link rel="icon" href="images/LNP.ico">
 </head>
 <body class="layui-bg-black">
  
@@ -31,7 +31,7 @@
         <div class="layui-input-inline">
             <button type="button" class="layui-btn layui-btn-normal">微信登录</button>
         </div>-->
-        <p><a href="register.html" class="fl">立即注册</a><a href="javascript:;" class="fr">忘记密码？</a></p>
+        <p><a href="/register" class="fl">立即注册</a><a href="javascript:;" class="fr">忘记密码？</a></p>
     </form>
 </div>
  
@@ -46,13 +46,13 @@
         form.on('submit(login)',function (data) {
             // console.log(data.field);
             $.ajax({
-                url:'login.php',
+                url:'/logintest',
                 data:data.field,
                 dataType:'text',
                 type:'post',
                 success:function (data) {
                     if (data == '1'){
-                        location.href = "../index.php";
+                        location.href = "/test";
                     }else{
                         layer.msg('登录名或密码错误');
                     }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cmn-Hans">
 
 <head>
   <meta charset="UTF-8">
@@ -9,7 +9,7 @@
   <title>注册页</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="layui/css/layui.css">
-  <link rel="icon" href="static/image/code.png">
+  <link rel="icon" href="images/LNP.ico">
   <script src="layui/layui.js"></script>
 </head>
 
@@ -24,7 +24,7 @@
         <!-- 用户名 -->
         <div class="layui-inline" style="width: 100%">
           <input type="text" id="user" name="account" required lay-verify="required" placeholder="请输入用户名"
-            autocomplete="off" class="layui-input"/>
+            autocomplete="off" class="layui-input" />
         </div>
       </div>
       <!-- 密码 -->
@@ -47,12 +47,12 @@
         <button type="submit" lay-submit lay-filter="sub" class="layui-btn">注册</button>
       </div>
       <hr style="width: 100%" />
-      <p style="width: 100%"><a href="login.html" class="fl">已有账号？立即登录</a><a href="javascript:;" class="fr">忘记密码？</a></p>
+      <p style="width: 100%"><a href="/login" class="fl">已有账号？立即登录</a><a href="javascript:;" class="fr">忘记密码？</a></p>
     </form>
   </div>
 
 
-  
+
   <script type="text/javascript">
     layui.use(['form', 'jquery', 'layer'], function () {
       var form = layui.form;
@@ -62,28 +62,31 @@
       //验证表单
       $('#user').blur(function () {
         var user = $(this).val();
-
         //alert(user);
         $.ajax({
-          url: 'checkUser.php',
-          type: 'post',
+          url: '/chuser',
           dataType: 'text',
+          type: 'post',
           data: {
             user: user
           },
           //验证用户名是否可用
           success: function (data) {
-            if (data == 1) {
+            if (data == '1') {
               //$('#ri').removeAttr('hidden');
               //$('#wr').attr('hidden', 'hidden');
-              
+              $('#user').css('border-bottom', '3px solid #009688');
 
 
-            } else {
+            } else if (data == '-1') {
               //$('#wr').removeAttr('hidden');
               //$('#ri').attr('hidden', 'hidden');
-              layer.msg('当前用户名已被占用! ')
+              $('#user').css('border-bottom', '3px solid #FF5722');
+              layer.msg('用户名不能为空! ');
 
+            } else {
+              $('#user').css('border-bottom', '3px solid #FF5722');
+              layer.msg('用户名已存在! ');
             }
 
           }
@@ -94,17 +97,17 @@
       // you code ...
       // 为密码添加正则验证
       $('#pwd').blur(function () {
-        var reg = /^[\w]{6,12}$/;
+        var reg = /^[\w]{4,12}$/;
         if (!($('#pwd').val().match(reg))) {
           //layer.msg('请输入合法密码');
           //$('#pwr').removeAttr('hidden');
           //$('#pri').attr('hidden', 'hidden');
-          $('#pwd').css('border-bottom','3px solid #FF5722');
-          layer.msg('密码6-12位');
+          $('#pwd').css('border-bottom', '3px solid #FF5722');
+          layer.msg('密码4-12位');
         } else {
           //$('#pri').removeAttr('hidden');
           //$('#pwr').attr('hidden', 'hidden');
-          $('#pwd').css('border-bottom','3px solid #009688');
+          $('#pwd').css('border-bottom', '3px solid #009688');
         }
       });
 
@@ -113,28 +116,29 @@
         if ($('#pwd').val() != $('#rpwd').val()) {
           //$('#rpwr').removeAttr('hidden');
           //$('#rpri').attr('hidden', 'hidden');
-          $('#rpwd').css('border-bottom','3px solid #FF5722');
+          $('#rpwd').css('border-bottom', '3px solid #FF5722');
           layer.msg('两次输入密码不一致!');
         } else {
           //$('#rpri').removeAttr('hidden');
           //$('#rpwr').attr('hidden', 'hidden');
-          $('#rpwd').css('border-bottom','3px solid #009688');
+          $('#rpwd').css('border-bottom', '3px solid #009688');
         };
       });
 
       //
       //添加表单监听事件,提交注册信息
-      form.on('submit(sub)', function () {
+      form.on('submit(sub)', function (data) {
         $.ajax({
-          url: 'reg.php',
-          type: 'post',
+          url: '/regtest',
+          data: data.field,
           dataType: 'text',
+          type: 'post',
           data: {
             user: $('#user').val(),
             pwd: $('#pwd').val(),
           },
           success: function (data) {
-            if (data == 1) {
+            if (data == '1') {
               layer.msg('注册成功');
               ///location.href = "login.html";
             } else {
